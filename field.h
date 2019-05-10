@@ -17,18 +17,22 @@ class FieldGraph {
 public:
     FieldGraph(size_t, size_t);
 
+    uint StepsNumber(uint);
+
 private:
+
     void addEdges(uint);
 
     void addEdg(uint, uint);
 
     void getKings(uint);
 
-    vector<vector<uint>> graphsLists;
-    vector<bool> isKing;
+    vector<vector<int>> graphsLists;
+    vector<bool> kings;
     uint cardinality;
     uint horizontalSize;
     uint verticalSize;
+    uint lastActiveEdg;
 };
 
 #endif //CHECKERS_FIELD_H
