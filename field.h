@@ -22,6 +22,8 @@ private:
 
     void addEdg(uint, uint);
 
+    void getKings(uint);
+
     vector<vector<uint>> graphsLists;
     vector<bool> isKing;
     uint cardinality;

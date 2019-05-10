@@ -32,3 +32,15 @@ void FieldGraph::addEdges(uint hs) {
 void FieldGraph::addEdg(uint from, uint to) {
     graphsLists[from].push_back(to);
 }
+
+void FieldGraph::getKings(uint crd) {
+    if (crd % 2 == horizontalSize % 2) {
+        for (int i = 0; i < horizontalSize; i += 2) {
+            isKing[i] = true;
+        }
+    } else {
+        for (int i = 1; i < horizontalSize; i += 2) {
+            isKing[i] = true;
+        }
+    }
+}
