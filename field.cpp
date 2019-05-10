@@ -4,38 +4,14 @@
 
 #include "field.h"
 
-FieldGraph::FieldGraph(const size_t _horizontalSize, const size_t _verticalSize) :
-        horizontalSize(static_cast<uint>(_horizontalSize)),
-        verticalSize(static_cast<uint>(_verticalSize)),
-        cardinality(static_cast<uint>(_horizontalSize * static_cast<uint>(_verticalSize))),
-        lastActiveEdg(static_cast<uint>(_horizontalSize) * (static_cast<uint>(_verticalSize) - 1) - 1),
+FieldGraph::FieldGraph(const uint _horizontalSize, const uint _verticalSize) :
+        horizontalSize(_horizontalSize),
+        verticalSize(_verticalSize),
+        cardinality(_horizontalSize * _verticalSize),
+        lastActiveEdg(_horizontalSize * (_verticalSize - 1) - 1),
         graphsLists(_horizontalSize * _verticalSize),
         kings(_horizontalSize) {
     addEdges(horizontalSize);
-}
-
-
-//Обрабатываем все поля:
-//-находим детей(поле на которое можно сходить);
-//-формируем невзвешенный, ориентированный граф.
-void FieldGraph::addEdges(uint hs) {
-    for (uint i = 0; i < cardinality; ++i) {
-        if (i == cardinality - hs) {
-            break;
-        }
-        if (i % hs == 0) {
-            addEdg(i, i + hs + 1);
-        } else if ((i + 1) % hs == 0) {
-            addEdg(i, i + hs - 1);
-        } else {
-            addEdg(i, i + hs - 1);
-            addEdg(i, i + hs + 1);
-        }
-    }
-}
-
-void FieldGraph::addEdg(uint from, uint to) {
-    graphsLists[from].push_back(to);
 }
 
 //Используя очередь, обходим весь граф.
@@ -73,6 +49,29 @@ uint FieldGraph::StepsNumber(uint crd) {
         }
     }
     return amount;
+}
+
+//Обрабатываем все поля:
+//- находим детей(поля на которые можно ходить);
+//- формируем невзвешенный, ориентированный граф.
+void FieldGraph::addEdges(uint hs) {
+    for (uint i = 0; i < cardinality; ++i) {
+        if (i == cardinality - hs) {
+            break;
+        }
+        if (i % hs == 0) {
+            addEdg(i, i + hs + 1);
+        } else if ((i + 1) % hs == 0) {
+            addEdg(i, i + hs - 1);
+        } else {
+            addEdg(i, i + hs - 1);
+            addEdg(i, i + hs + 1);
+        }
+    }
+}
+
+void FieldGraph::addEdg(uint from, uint to) {
+    graphsLists[from].push_back(to);
 }
 
 void FieldGraph::getKings(uint crd) {

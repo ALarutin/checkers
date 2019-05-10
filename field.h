@@ -15,7 +15,7 @@ typedef unsigned int uint;              //Используем не отрица
 
 class FieldGraph {
 public:
-    FieldGraph(size_t, size_t);         //Конструктор
+    FieldGraph(uint, uint);             //Конструктор
 
     uint StepsNumber(uint);             //Метод для подсчета количества путей.
 
