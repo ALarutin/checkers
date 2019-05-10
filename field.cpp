@@ -1,5 +1,5 @@
 //
-// Created by mac on 10/05/2019.
+// Created on 10/05/2019.
 //
 
 #include "field.h"
@@ -14,6 +14,10 @@ FieldGraph::FieldGraph(const size_t _horizontalSize, const size_t _verticalSize)
     addEdges(horizontalSize);
 }
 
+
+//Обрабатываем все поля:
+//-находим детей(поле на которое можно сходить);
+//-формируем невзвешенный, ориентированный граф.
 void FieldGraph::addEdges(uint hs) {
     for (uint i = 0; i < cardinality; ++i) {
         if (i == cardinality - hs) {
@@ -34,6 +38,8 @@ void FieldGraph::addEdg(uint from, uint to) {
     graphsLists[from].push_back(to);
 }
 
+//Используя очередь, обходим весь граф.
+//Если мы встали на ячейку "дамка", то записываем в массив, в соответственную ячейку +1.
 uint FieldGraph::StepsNumber(uint crd) {
     uint coordinate = crd - 1;
     uint amount = 0;
@@ -60,7 +66,7 @@ uint FieldGraph::StepsNumber(uint crd) {
             }
         }
     }
-
+    //Обходим полученный массив путей, и суммируем количетсво путей.
     for (int i = 0; i < horizontalSize; ++i) {
         if (paths[i] != 0) {
             amount += paths[i];

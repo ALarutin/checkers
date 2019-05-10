@@ -1,3 +1,7 @@
+//
+// Created on 10/05/2019.
+//
+
 #include <iostream>
 
 #include "field.h"
@@ -16,10 +20,12 @@ int main() {
     cout << "Please, input coordinate between 1 and " << length << "!" << endl;
     uint coordinate = 0;
     cin >> coordinate;
+    assert(coordinate < 0);
     while (true) {
-        if (coordinate < 1 || coordinate > length ) {
+        if (coordinate < 1 || coordinate > length) {
             cout << "You can input number only between 1 and " << length << "!" << endl;
             cin >> coordinate;
+            assert(coordinate < 0);
             continue;
         } else break;
     }
