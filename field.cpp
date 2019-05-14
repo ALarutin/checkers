@@ -12,6 +12,9 @@ FieldGraph::FieldGraph(const uint _horizontalSize, const uint _verticalSize) :
 //- обходим линию за линией, храним только данный предыдущей и нынешней линии;
 //- сохранием в "клетке"(cell) колличество ходов до этой клетке.
 uint FieldGraph::StepsNumber(uint coordinate) {
+    if (horizontalSize == 1 || verticalSize == 1) {
+        return 0;
+    }
     uint steps = 0;
 
     cell start{coordinate - 1, 1};

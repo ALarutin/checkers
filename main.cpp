@@ -20,13 +20,13 @@ int main() {
 
     FieldGraph field(length, width);
 
-    cout << "Please, input coordinate between 1 and " << length << "!" << endl;
+    cout << "Please, input coordinate between 0 and " << length + 1 << "!" << endl;
     uint coordinate = 0;
     cin >> coordinate;
     assert(coordinate > 0);
     while (true) {
         if (coordinate < 1 || coordinate > length) {
-            cout << "You can input number only between 1 and " << length << "!" << endl;
+            cout << "You can input number only between 0 and " << length + 1 << "!" << endl;
             cin >> coordinate;
             assert(coordinate > 0);
             continue;
