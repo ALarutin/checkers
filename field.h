@@ -6,12 +6,15 @@
 #define CHECKERS_FIELD_H
 
 #include "vector"
-#include "queue"
+#include "list"
+#include "map"
 
-using std::queue;
+using std::map;
+using std::list;
 using std::vector;
+using std::pair;
 
-typedef unsigned int uint;              //Используем не отрицательные значения.
+typedef unsigned uint;                  //Используем не отрицательные значения.
 
 class FieldGraph {
 public:
@@ -20,19 +23,15 @@ public:
     uint StepsNumber(uint);             //Метод для подсчета количества путей.
 
 private:
+    struct cell {                       //Клетка, хранит в себе координату(только горизонтальную) и количетсво путей до нее.
+        cell() = default;
 
-    void addEdges(uint);                //Метод для формирования графа.
+        uint coordinate;                //Координата клетки.
+        uint paths;                     //Колличество путей до клетки.
+    };
 
-    void addEdg(uint, uint);            //Метод для добавление узла графа.
-
-    void getKings(uint);                //Метод для определения массива полей, на которых мы станет "дамкой".
-
-    vector<vector<int>> graphsLists;    //Граф.
-    vector<bool> kings;                 //Массив полей, на которых мы станет "дамкой"
-    uint cardinality;                   //Количетсво полей.
     uint horizontalSize;                //Количество полей по горизонтали.
     uint verticalSize;                  //Количество полей по вертикали.
-    uint lastActiveEdg;                 //Номер последнего поля на предпоследней линии.
 };
 
 #endif //CHECKERS_FIELD_H

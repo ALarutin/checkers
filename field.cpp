@@ -6,82 +6,51 @@
 
 FieldGraph::FieldGraph(const uint _horizontalSize, const uint _verticalSize) :
         horizontalSize(_horizontalSize),
-        verticalSize(_verticalSize),
-        cardinality(_horizontalSize * _verticalSize),
-        lastActiveEdg(_horizontalSize * (_verticalSize - 1) - 1),
-        graphsLists(_horizontalSize * _verticalSize),
-        kings(_horizontalSize) {
-    addEdges(horizontalSize);
-}
+        verticalSize(_verticalSize) {}
 
-//Используя очередь, обходим весь граф.
-//Если мы встали на ячейку "дамка", то записываем в массив, в соответственную ячейку +1.
-uint FieldGraph::StepsNumber(uint crd) {
-    uint coordinate = crd - 1;
-    uint amount = 0;
-    vector<uint> paths(horizontalSize);
+//Используем 2 списка (почему список, а не очередь, потому что в одном случае нужно доставть элемент не с front, а с back):
+//- обходим линию за линией, храним только данный предыдущей и нынешней линии;
+//- сохранием в "клетке"(cell) колличество ходов до этой клетке.
+uint FieldGraph::StepsNumber(uint coordinate) {
+    uint steps = 0;
 
-    getKings(coordinate);
+    cell start{coordinate - 1, 1};
 
-    queue<uint> queue;
-    queue.push(coordinate);
-    while (!queue.empty()) {
-        uint last = queue.front();
-        queue.pop();
-        for (auto &i : graphsLists[last]) {
-            uint temp = static_cast<uint>(i);
-            if (temp > lastActiveEdg) {
-                if (paths[temp - lastActiveEdg - 1] != 0) {
-                    paths[temp - lastActiveEdg - 1]++;
-                } else if (kings[temp - lastActiveEdg - 1]) {
-                    paths[temp - lastActiveEdg - 1]++;
-                    queue.push(temp);
-                }
+    list<cell> lastLine;
+    lastLine.push_back(start);                                      //Заполянем список первой клеткой.
+
+    for (uint i = 1; i < verticalSize; i++) {
+        list<cell> thisLine;
+        while (!lastLine.empty()) {
+            cell last = lastLine.front();
+            lastLine.pop_front();
+            cell nextLeft{last.coordinate - 1};
+            if (!thisLine.empty()) {                                //Проверяем, если список не пуст,
+                nextLeft = thisLine.back();                         //то у этой клетки больше 1 родителя,
+                thisLine.pop_back();
+            }
+            nextLeft.paths += last.paths;                           //и нужно прибавить новое количетсво путей.
+            cell nextRight{last.coordinate + 1};
+            nextRight.paths += last.paths;
+            if (last.coordinate == 0) {
+                thisLine.push_back(nextRight);
+            } else if (last.coordinate == horizontalSize - 1) {
+                thisLine.push_back(nextLeft);
             } else {
-                queue.push(temp);
+                thisLine.push_back(nextLeft);
+                thisLine.push_back(nextRight);
             }
         }
+        lastLine = thisLine;
     }
-    //Обходим полученный массив путей, и суммируем количетсво путей.
-    for (int i = 0; i < horizontalSize; ++i) {
-        if (paths[i] != 0) {
-            amount += paths[i];
-        }
+    while (!lastLine.empty()) {                                     //Обходим полученный в конце список, суммируя все пути.
+        cell last = lastLine.front();
+        lastLine.pop_front();
+        steps += last.paths;
     }
-    return amount;
+    return steps;
 }
 
-//Обрабатываем все поля:
-//- находим детей(поля на которые можно ходить);
-//- формируем невзвешенный, ориентированный граф.
-void FieldGraph::addEdges(uint hs) {
-    for (uint i = 0; i < cardinality; ++i) {
-        if (i == cardinality - hs) {
-            break;
-        }
-        if (i % hs == 0) {
-            addEdg(i, i + hs + 1);
-        } else if ((i + 1) % hs == 0) {
-            addEdg(i, i + hs - 1);
-        } else {
-            addEdg(i, i + hs - 1);
-            addEdg(i, i + hs + 1);
-        }
-    }
-}
 
-void FieldGraph::addEdg(uint from, uint to) {
-    graphsLists[from].push_back(to);
-}
 
-void FieldGraph::getKings(uint crd) {
-    if (crd % 2 == horizontalSize % 2) {
-        for (int i = 1; i < horizontalSize; i += 2) {
-            kings[i] = true;
-        }
-    } else {
-        for (int i = 0; i < horizontalSize; i += 2) {
-            kings[i] = true;
-        }
-    }
-}
+
